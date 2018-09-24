@@ -1,0 +1,38 @@
+@import "~bulma/sass/utilities/initial-variables";
+@import "~bulma/sass/utilities/functions";
+
+// Customize
+// Colors
+$primary: #2D3947;
+// Links
+$link-hover: #00D1B2;
+
+$fa-font-path: "~font-awesome/fonts/";
+@import "~font-awesome/scss/font-awesome.scss";
+
+@import "~bulma/bulma.sass";
+
+html,
+body {
+    font-size: 14px;
+}
+
+.talk-card .card-content {
+    font-size: 12px;
+    tbody tr {
+        th:nth-child(1) {
+            color: red;
+            vertical-align: middle;
+        }
+        th:nth-child(2) {
+            font-weight: normal;
+            vertical-align: middle;
+        }
+        th:nth-child(3) {
+            text-align: center;
+            button {
+                width: 100%;
+            }
+        }
+    }
+}

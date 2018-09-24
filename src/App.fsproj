@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Types.fs" />
+    <Compile Include="Views/Card.fs" />
+    <Compile Include="App.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <DotnetCliToolReference Include="dotnet-fable" Version="2.0.0-beta-005" />
+    <PackageReference Include="Fable.Core" Version="2.0.0-beta-001" />
+    <PackageReference Include="Fable.Import.Browser" Version="1.3.0" />
+    <PackageReference Include="Fable.PowerPack" Version="2.0.0-beta-004" />
+    <PackageReference Include="Fable.React" Version="4.0.0-alpha-001" />
+    <PackageReference Include="Fable.Elmish" Version="2.0.0-beta-4" />
+    <PackageReference Include="Fable.Elmish.React" Version="2.0.0-beta-4" />
+    <PackageReference Include="Fable.Elmish.Browser" Version="2.0.0-beta-5" />
+    <PackageReference Include="Fulma" Version="1.0.0-beta-026" />
+    <PackageReference Include="Fulma.Extensions" Version="1.0.0-beta-016" />
+    <PackageReference Include="Fulma.Elmish" Version="0.1.0-beta-011" />
+    <PackageReference Include="Thoth.Json" Version="2.0.0-beta-004" />
+  </ItemGroup>
+</Project>
