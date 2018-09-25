@@ -15,6 +15,7 @@
     "babel-loader": "^8.0.0",
     "body-parser": "^1.18.3",
     "bulma": "^0.7.1",
+    "bulma-badge": "^2.0.0",
     "bulma-pageloader": "^2.1.0",
     "copy-webpack-plugin": "^4.5.2",
     "css-loader": "^1.0.0",

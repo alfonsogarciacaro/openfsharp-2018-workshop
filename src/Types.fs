@@ -20,6 +20,8 @@ type Msg =
   | VoteUp of talkId: Guid * takeId: Guid
   | UpdateNewTakeAway of talkId: Guid * string
   | AddTakeAway of talkId: Guid * description: string
+  | GetTalks of Talk list
+  | FetchError of ex: Exception
 
 module Json =
   open Thoth.Json

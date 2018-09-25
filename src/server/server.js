@@ -20,17 +20,38 @@ app.use(
 // Prevent cache over JSON response
 app.set("etag", false)
 
-app.get("/api/talk/:id", (req, res) => {
+app.get("/api/talks", (req, res) => {
+    sendJson(res, Data.get());
+});
+
+app.get("/api/talks/:id", (req, res) => {
     const id = req.param("id");
     sendJson(res, Data.get()[id]);
+});
+
+app.post("/api/takeaways/:talkid", (req, res) => {
+    const talkid = req.param("talkid");
+    const take = Data.edit(talks => {
+        const take = req.body;
+        for (let talk of talks) {
+            if (talk.id === talkid) {
+                talk.takeAways.push(take);
+                break;
+            }
+        }
+        return take;
+    });
+    sendJson(res, take);
 });
 
 app.post("/api/vote/:talkid/:takeid", (req, res) => {
     const talkid = req.param("talkid");
     const takeid = req.param("takeid");
-    const take = data[talkid].takes[takeid];
-    take.votes++;
-    saveData();
+    const take = Data.edit(d => {
+        const take = data[talkid].takes[takeid];
+        take.votes++;
+        return take;
+    });
     sendJson(res, take.votes);
 });
 

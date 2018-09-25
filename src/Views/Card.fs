@@ -8,11 +8,16 @@ open Fulma
 open Fulma.FontAwesome
 open Types
 
-let buttonCell disabled icon onClick =
+let buttonCell disabled badge icon onClick =
     th [] [
         Button.button [
-            Button.Disabled disabled
-            Button.OnClick (fun _ -> onClick())
+            match badge with
+            | Some value ->
+                yield Button.CustomClass "badge is-badge-success"
+                yield Button.Props [Data("badge", value)]
+            | None -> ()
+            yield Button.Disabled disabled
+            yield Button.OnClick (fun _ -> onClick())
         ] [
             Icon.faIcon [] [
                 Fa.icon icon
@@ -33,14 +38,14 @@ let newTakeAway dispatch (talk: Talk) =
                 ]
             ]
         ]
-        buttonCell (String.IsNullOrEmpty talk.NewTakeAway) Fa.I.Plus (fun _ ->
+        buttonCell (String.IsNullOrEmpty talk.NewTakeAway) None Fa.I.Plus (fun _ ->
             AddTakeAway(talk.Id, talk.NewTakeAway) |> dispatch)
     ]
 
 let takeAway dispatch (talk: Talk) (take: TakeAway) =
     tr [] [
         th [] [str take.Description]
-        buttonCell false Fa.I.ThumbsUp (fun _ ->
+        buttonCell false (Some take.Votes) Fa.I.ThumbsUp (fun _ ->
             VoteUp(talk.Id, take.Id) |> dispatch)
     ]
 

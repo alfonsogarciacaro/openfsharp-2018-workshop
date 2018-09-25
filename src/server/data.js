@@ -17,6 +17,7 @@ exports.get = function () {
 }
 
 exports.edit = function (f) {
-    f(data);
+    const res = f(data);
     Fs.writeFileSync(dataPath, JSON.stringify(data, null, 4));
+    return res;
 }
