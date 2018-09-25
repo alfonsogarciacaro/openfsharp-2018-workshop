@@ -7,7 +7,7 @@ open Fable.PowerPack
 open Thoth.Json
 open Elmish
 open Fulma
-open Prelude
+open Global
 open Types
 
 [<RequireQualifiedAccess>]

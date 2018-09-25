@@ -1,4 +1,4 @@
-module Prelude
+module Global
 
 open System
 open Fable.Core
@@ -7,7 +7,7 @@ open Fable.Import
 
 [<AutoOpen>]
 module Literals =
-    let [<Literal>] SERVICE_WORKER_PATH = "service_worker.js"
+    let [<Literal>] SERVICE_WORKER_PATH = "service-worker.js"
     let [<Literal>] GET_TALKS = "/api/talks"
     let [<Literal>] POST_TAKEAWAY ="/api/takeaways"
     let [<Literal>] POST_VOTE ="/api/vote"
