@@ -5,12 +5,24 @@
     <title>Fable PWA</title>
     <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" type="image/png" href="assets/favicon-32x32.png" sizes="32x32" />
-    <link rel="shortcut icon" type="image/png" href="assets/favicon-16x16.png" sizes="16x16" />
+    <link rel="shortcut icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+    <link rel="shortcut icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+
+    <!-- FONT AWESOME -->
+    <link href="css/fontawesome.min.css" rel="stylesheet">
+    <link href="css/solid.min.css" rel="stylesheet">
+
+    <!-- SERVICE WORKER -->
+    <script>
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('service-worker.js');
+          });
+        }
+    </script>
 </head>
 
 <body>
     <div id="elmish-app"></div>
 </body>
-
 </html>

@@ -24,24 +24,21 @@ let buttonCell disabled icon onClick =
 
 let newTakeAway dispatch (talk: Talk) =
     tr [] [
-        th [] []
         th [] [
             Control.div [] [
                 Input.text [
                     Input.Placeholder "What did you learn?"
                     Input.Value talk.NewTakeAway
+                    Input.OnChange (fun ev -> UpdateNewTakeAway(talk.Id, ev.Value) |> dispatch)
                 ]
             ]
         ]
-        buttonCell (String.IsNullOrEmpty talk.NewTakeAway) Fa.I.ThumbsUp (fun _ ->
+        buttonCell (String.IsNullOrEmpty talk.NewTakeAway) Fa.I.Plus (fun _ ->
             AddTakeAway(talk.Id, talk.NewTakeAway) |> dispatch)
-
-
     ]
 
 let takeAway dispatch (talk: Talk) (take: TakeAway) =
     tr [] [
-        th [] [str ("+" + string take.Votes)]
         th [] [str take.Description]
         buttonCell false Fa.I.ThumbsUp (fun _ ->
             VoteUp(talk.Id, take.Id) |> dispatch)

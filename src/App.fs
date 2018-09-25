@@ -5,9 +5,8 @@ open Fable.Core.JsInterop
 open Fable.Helpers.React
 open Elmish
 open Fulma
+open Prelude
 open Types
-
-let registerServiceWorker(): unit = importMember "./js/util.js"
 
 let init () =
     let sample =
@@ -19,23 +18,23 @@ let init () =
           ]
           NewTakeAway = ""
         }
-    [sample; sample], Cmd.none
+    [sample; { sample with Id = Guid.NewGuid() }], Cmd.none
 
 let update msg model =
     match msg with
     | VoteUp(talkId, takeId) ->
         printfn "TODO: VoteUp"
         model, Cmd.none
-    | AddTakeAway(talkId, takeId) ->
-        printfn "TODO: AddTakeAway"
+    | AddTakeAway(talkId, description) ->
+        printfn "TODO: AddTakeAway %s" description
         model, Cmd.none
+    | UpdateNewTakeAway(talkId, description) ->
+        model |> List.replaceById talkId (fun x -> { x with NewTakeAway = description }), Cmd.none
 
 let view model dispatch =
     div [] (List.map (Card.view dispatch) model)
 
 open Elmish.React
-
-registerServiceWorker()
 
 Program.mkProgram init update view
 |> Program.withReact "elmish-app"
