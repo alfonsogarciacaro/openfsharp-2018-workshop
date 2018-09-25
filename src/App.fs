@@ -14,8 +14,6 @@ open Types
 module Rest =
     open Fable.PowerPack.Fetch.Fetch_types
 
-    let [<Literal>] GET_TALKS = "/api/talks"
-
     let get url (decoder: Decode.Decoder<'T>) () =
         Fetch.fetch url []
         |> Promise.bind (fun res -> res.json())
@@ -33,21 +31,35 @@ module Rest =
             Decode.unwrap "$" decoder json)
 
 let init () =
-    [], Cmd.ofPromise (Rest.get Rest.GET_TALKS (Decode.list Json.talkDecoder)) () GetTalks FetchError
+    [], Cmd.ofPromise (Rest.get GET_TALKS (Decode.list Json.talkDecoder)) ()
+            GetTalksSuccess FetchError
 
 let update msg model =
     match msg with
     | FetchError err ->
-        Log.Error("[FETCH]", err.Message)
+        Log.Error("[FETCH] " + err.Message)
         model, Cmd.none
-    | GetTalks talks ->
+    | GetTalksSuccess talks ->
         talks, Cmd.none
-    | VoteUp(talkId, takeId) ->
-        printfn "TODO: VoteUp"
-        model, Cmd.none
+    | VoteUp(talkId, take) ->
+        let url = sprintf "%s/%s" POST_VOTE (string talkId)
+        let take = { take with Votes = take.Votes + 1 }
+        model, Cmd.ofPromise (Rest.post url Json.takeAwayEncode Json.takeAwayDecoder) take
+            (fun take -> VoteUpSuccess(talkId, take)) FetchError
+    | VoteUpSuccess(talkId, take) ->
+        model |> List.replaceById talkId (fun x ->
+            { x with TakeAways = x.TakeAways |> List.replaceById take.Id (fun _ -> take) }), Cmd.none
     | AddTakeAway(talkId, description) ->
-        printfn "TODO: AddTakeAway %s" description
-        model, Cmd.none
+        let take =
+            { Id = Guid.NewGuid()
+              Description = description
+              Votes = 1 }
+        let url = sprintf "%s/%s" POST_TAKEAWAY (string talkId)
+        model, Cmd.ofPromise (Rest.post url Json.takeAwayEncode Json.takeAwayDecoder) take
+            (fun take -> AddTakeAwaySuccess(talkId, take)) FetchError
+    | AddTakeAwaySuccess(talkId, take) ->
+        model |> List.replaceById talkId (fun x ->
+            { x with TakeAways = x.TakeAways @ [take] }), Cmd.none
     | UpdateNewTakeAway(talkId, description) ->
         model |> List.replaceById talkId (fun x -> { x with NewTakeAway = description }), Cmd.none
 
@@ -59,3 +71,9 @@ open Elmish.React
 Program.mkProgram init update view
 |> Program.withReact "elmish-app"
 |> Program.run
+
+#if DEBUG
+unRegisterServiceWorkers()
+#else
+registerServiceWorker(SERVICE_WORKER_PATH)
+#endif

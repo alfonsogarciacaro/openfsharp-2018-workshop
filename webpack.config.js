@@ -53,7 +53,7 @@ module.exports = function (_,opts) {
         filename: 'app.js'
     },
     devtool: isProduction ? "source-map" : "eval",
-    plugins: opts.watch
+    plugins: !isProduction
         ? plugins
         : plugins.concat(new WorkboxPlugin.GenerateSW({
             // these options encourage the ServiceWorkers to get in there fast

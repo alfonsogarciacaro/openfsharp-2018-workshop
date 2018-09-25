@@ -3,8 +3,7 @@
   "scripts": {
     "postinstall": "dotnet restore src",
     "start": "cd src && dotnet fable webpack -- --mode development --watch",
-    "build": "cd src && dotnet fable webpack -- --mode development",
-    "build-prod": "cd src && dotnet fable webpack -- --mode production",
+    "build": "cd src && dotnet fable webpack -- --mode production",
     "start-server": "node src/server/server.js"
   },
   "dependencies": {

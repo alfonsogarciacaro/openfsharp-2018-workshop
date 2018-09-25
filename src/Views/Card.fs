@@ -34,7 +34,8 @@ let newTakeAway dispatch (talk: Talk) =
                 Input.text [
                     Input.Placeholder "What did you learn?"
                     Input.Value talk.NewTakeAway
-                    Input.OnChange (fun ev -> UpdateNewTakeAway(talk.Id, ev.Value) |> dispatch)
+                    Input.OnChange (fun ev ->
+                        UpdateNewTakeAway(talk.Id, ev.Value) |> dispatch)
                 ]
             ]
         ]
@@ -46,7 +47,7 @@ let takeAway dispatch (talk: Talk) (take: TakeAway) =
     tr [] [
         th [] [str take.Description]
         buttonCell false (Some take.Votes) Fa.I.ThumbsUp (fun _ ->
-            VoteUp(talk.Id, take.Id) |> dispatch)
+            VoteUp(talk.Id, take) |> dispatch)
     ]
 
 let view dispatch (talk: Talk) =

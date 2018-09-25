@@ -33,26 +33,24 @@ app.post("/api/takeaways/:talkid", (req, res) => {
     const talkid = req.param("talkid");
     const take = Data.edit(talks => {
         const take = req.body;
-        for (let talk of talks) {
-            if (talk.id === talkid) {
-                talk.takeAways.push(take);
-                break;
-            }
-        }
+        const talk = getById(talks, talkid);
+        talk.takeAways.push(take);
         return take;
     });
     sendJson(res, take);
 });
 
-app.post("/api/vote/:talkid/:takeid", (req, res) => {
+app.post("/api/vote/:talkid", (req, res) => {
     const talkid = req.param("talkid");
-    const takeid = req.param("takeid");
-    const take = Data.edit(d => {
-        const take = data[talkid].takes[takeid];
-        take.votes++;
-        return take;
+    const take = Data.edit(talks => {
+        const takeNew = req.body;
+        const talk = getById(talks, talkid);
+        const takeOld = getById(talk.takeAways, takeNew.id);
+        // Just increase the votes
+        takeOld.votes++;
+        return takeOld;
     });
-    sendJson(res, take.votes);
+    sendJson(res, take);
 });
 
 
@@ -64,4 +62,13 @@ app.listen(PORT, () => {
 function sendJson(res, data) {
     res.setHeader("Content-Type", "application/json");
     res.send(JSON.stringify(data));
+}
+
+function getById(arr, id) {
+    for (let x of arr) {
+        if (x.id === id) {
+            return x;
+        }
+    }
+    return null;
 }

@@ -17,10 +17,12 @@ type Talk =
 type Model = Talk list
 
 type Msg =
-  | VoteUp of talkId: Guid * takeId: Guid
+  | VoteUp of talkId: Guid * take: TakeAway
+  | VoteUpSuccess of talkId: Guid * TakeAway
   | UpdateNewTakeAway of talkId: Guid * string
   | AddTakeAway of talkId: Guid * description: string
-  | GetTalks of Talk list
+  | AddTakeAwaySuccess of talkId: Guid * TakeAway
+  | GetTalksSuccess of Talk list
   | FetchError of ex: Exception
 
 module Json =
