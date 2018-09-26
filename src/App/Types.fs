@@ -24,8 +24,6 @@ type Msg =
   | VoteUp of talkId: Guid * take: TakeAway
   | VoteUpSuccess of talkId: Guid * TakeAway
   | UpdateNewTakeAway of talkId: Guid * string
-  | AddTakeAway of talkId: Guid * description: string
-  | AddTakeAwaySuccess of talkId: Guid * TakeAway
   | GetTalksSuccess of Talk list
   | FetchError of ex: Exception
 

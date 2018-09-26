@@ -52,18 +52,6 @@ let update msg model =
         let talks = model.Talks |> List.replaceById talkId (fun x ->
             { x with TakeAways = x.TakeAways |> List.replaceById take.Id (fun _ -> take) })
         { model with Talks = talks }, Cmd.none
-    | AddTakeAway(talkId, description) ->
-        let take =
-            { Id = Guid.NewGuid()
-              Description = description
-              Votes = 1 }
-        let url = sprintf "%s/%s" POST_TAKEAWAY (string talkId)
-        model, Cmd.ofPromise (Rest.post url Json.takeAwayEncode Json.takeAwayDecoder) take
-            (fun take -> AddTakeAwaySuccess(talkId, take)) FetchError
-    | AddTakeAwaySuccess(talkId, take) ->
-        let talks = model.Talks |> List.replaceById talkId (fun x ->
-            { x with TakeAways = x.TakeAways @ [take] })
-        { model with Talks = talks }, Cmd.none
     | UpdateNewTakeAway(talkId, description) ->
         let talks = model.Talks |> List.replaceById talkId (fun x ->
             { x with NewTakeAway = description })

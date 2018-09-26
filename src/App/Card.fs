@@ -39,8 +39,7 @@ let newTakeAway dispatch (talk: Talk) =
                 ]
             ]
         ]
-        buttonCell (String.IsNullOrEmpty talk.NewTakeAway) None Fa.I.Plus (fun _ ->
-            AddTakeAway(talk.Id, talk.NewTakeAway) |> dispatch)
+        buttonCell (String.IsNullOrEmpty talk.NewTakeAway) None Fa.I.Plus (fun _ -> ())
     ]
 
 let takeAway dispatch (talk: Talk) (take: TakeAway) =
