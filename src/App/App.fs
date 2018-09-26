@@ -31,10 +31,21 @@ module Rest =
             Decode.unwrap "$" decoder json)
 
 let init () =
-    let model = { Talks = []; HavingFun = false; FunsnakeCom = None }
-    let cmd = Cmd.ofPromise (Rest.get GET_TALKS (Decode.list Json.talkDecoder)) ()
-                    GetTalksSuccess FetchError
-    model, cmd
+    let talks = [
+        { Id = Guid.NewGuid()
+          Title = "Fable 2 is coming!"
+          TakeAways = [
+            { Id = Guid.NewGuid()
+              Description = "Many improvements!"
+              Votes = 5 }
+          ]
+          NewTakeAway = ""
+        }
+    ]
+    let model = { Talks = talks; HavingFun = false; FunsnakeCom = None }
+    // let cmd = Cmd.ofPromise (Rest.get GET_TALKS (Decode.list Json.talkDecoder)) ()
+    //                 GetTalksSuccess FetchError
+    model, Cmd.none
 
 let update msg model =
     match msg with
@@ -44,10 +55,11 @@ let update msg model =
     | GetTalksSuccess talks ->
         { model with Talks = talks }, Cmd.none
     | VoteUp(talkId, take) ->
-        let url = sprintf "%s/%s" POST_VOTE (string talkId)
-        let take = { take with Votes = take.Votes + 1 }
-        model, Cmd.ofPromise (Rest.post url Json.takeAwayEncode Json.takeAwayDecoder) take
-            (fun take -> VoteUpSuccess(talkId, take)) FetchError
+        model, Cmd.none
+        // let url = sprintf "%s/%s" POST_VOTE (string talkId)
+        // let take = { take with Votes = take.Votes + 1 }
+        // model, Cmd.ofPromise (Rest.post url Json.takeAwayEncode Json.takeAwayDecoder) take
+        //     (fun take -> VoteUpSuccess(talkId, take)) FetchError
     | VoteUpSuccess(talkId, take) ->
         let talks = model.Talks |> List.replaceById talkId (fun x ->
             { x with TakeAways = x.TakeAways |> List.replaceById take.Id (fun _ -> take) })
