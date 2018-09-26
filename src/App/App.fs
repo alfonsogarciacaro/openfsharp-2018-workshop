@@ -9,7 +9,6 @@ open Elmish
 open Fulma
 open Global
 open Types
-open Elmish
 
 [<RequireQualifiedAccess>]
 module Rest =
@@ -69,36 +68,12 @@ let update msg model =
         let talks = model.Talks |> List.replaceById talkId (fun x ->
             { x with NewTakeAway = description })
         { model with Talks = talks }, Cmd.none
-    | ToggleFun v ->
-        match v, model.FunsnakeCom with
-        | false, _ | true, Some _ ->
-            { model with HavingFun = v }, Cmd.none
-        | _ ->
-            let importFunsnake dispatch =
-                Fable.Core.JsInterop.importDynamic<Funsnake.IExports> "../Funsnake/Funsnake.fsproj"
-                |> Promise.iter (fun m -> GetFunsnakeComSucess m.Component |> dispatch)
-            model, [importFunsnake]
-    | GetFunsnakeComSucess com ->
-        { model with HavingFun = true; FunsnakeCom = Some com }, Cmd.none
 
 let view (model: Model) dispatch =
-    if model.HavingFun then
-        Level.level [] [
-            Level.item [] [from model.FunsnakeCom.Value null []]
-            Level.item [] [Button.button [
-                Button.OnClick (fun _ -> ToggleFun false |> dispatch)
-            ] [str "Back to business"]]
-        ]
-    else
-        div [] [
-            yield! List.map (Card.view dispatch) model.Talks
-            yield br []
-            yield Level.level [] [
-                Level.item [] [Button.button [
-                    Button.OnClick (fun _ -> ToggleFun true |> dispatch)
-                ] [str "Play Funsnake!"]]
-            ]
-        ]
+    div [] [
+        yield! List.map (Card.view dispatch) model.Talks
+        yield br []
+    ]
 
 open Elmish.React
 

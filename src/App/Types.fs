@@ -27,9 +27,7 @@ type Msg =
   | AddTakeAway of talkId: Guid * description: string
   | AddTakeAwaySuccess of talkId: Guid * TakeAway
   | GetTalksSuccess of Talk list
-  | GetFunsnakeComSucess of React.ComponentClass<obj>
   | FetchError of ex: Exception
-  | ToggleFun of bool
 
 module Json =
   open Thoth.Json
