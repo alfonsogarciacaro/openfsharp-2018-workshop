@@ -61,10 +61,6 @@ module.exports = {
             // and not allow any straggling "old" SWs to hang around
             clientsClaim: true,
             skipWaiting: true,
-            runtimeCaching: [{
-                urlPattern: new RegExp('/api/.*'),
-                handler: 'staleWhileRevalidate'
-              }]
         })
     ],
     // - fable-loader: transforms F# into JS
