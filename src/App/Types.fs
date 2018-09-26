@@ -1,6 +1,7 @@
 module Types
 
 open System
+open Fable.Import
 
 type TakeAway =
     { Id: Guid
@@ -14,7 +15,10 @@ type Talk =
       // Not serialized
       NewTakeAway: string }
 
-type Model = Talk list
+type Model =
+    { Talks: Talk list
+      HavingFun: bool
+      FunsnakeCom: React.ComponentClass<obj> option }
 
 type Msg =
   | VoteUp of talkId: Guid * take: TakeAway
@@ -23,7 +27,9 @@ type Msg =
   | AddTakeAway of talkId: Guid * description: string
   | AddTakeAwaySuccess of talkId: Guid * TakeAway
   | GetTalksSuccess of Talk list
+  | GetFunsnakeComSucess of React.ComponentClass<obj>
   | FetchError of ex: Exception
+  | ToggleFun of bool
 
 module Json =
   open Thoth.Json

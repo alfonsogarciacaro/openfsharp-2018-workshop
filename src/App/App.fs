@@ -9,6 +9,7 @@ open Elmish
 open Fulma
 open Global
 open Types
+open Elmish
 
 [<RequireQualifiedAccess>]
 module Rest =
@@ -31,8 +32,10 @@ module Rest =
             Decode.unwrap "$" decoder json)
 
 let init () =
-    [], Cmd.ofPromise (Rest.get GET_TALKS (Decode.list Json.talkDecoder)) ()
-            GetTalksSuccess FetchError
+    let model = { Talks = []; HavingFun = false; FunsnakeCom = None }
+    let cmd = Cmd.ofPromise (Rest.get GET_TALKS (Decode.list Json.talkDecoder)) ()
+                    GetTalksSuccess FetchError
+    model, cmd
 
 let update msg model =
     match msg with
@@ -40,15 +43,16 @@ let update msg model =
         Log.Error("[FETCH] " + err.Message)
         model, Cmd.none
     | GetTalksSuccess talks ->
-        talks, Cmd.none
+        { model with Talks = talks }, Cmd.none
     | VoteUp(talkId, take) ->
         let url = sprintf "%s/%s" POST_VOTE (string talkId)
         let take = { take with Votes = take.Votes + 1 }
         model, Cmd.ofPromise (Rest.post url Json.takeAwayEncode Json.takeAwayDecoder) take
             (fun take -> VoteUpSuccess(talkId, take)) FetchError
     | VoteUpSuccess(talkId, take) ->
-        model |> List.replaceById talkId (fun x ->
-            { x with TakeAways = x.TakeAways |> List.replaceById take.Id (fun _ -> take) }), Cmd.none
+        let talks = model.Talks |> List.replaceById talkId (fun x ->
+            { x with TakeAways = x.TakeAways |> List.replaceById take.Id (fun _ -> take) })
+        { model with Talks = talks }, Cmd.none
     | AddTakeAway(talkId, description) ->
         let take =
             { Id = Guid.NewGuid()
@@ -58,13 +62,43 @@ let update msg model =
         model, Cmd.ofPromise (Rest.post url Json.takeAwayEncode Json.takeAwayDecoder) take
             (fun take -> AddTakeAwaySuccess(talkId, take)) FetchError
     | AddTakeAwaySuccess(talkId, take) ->
-        model |> List.replaceById talkId (fun x ->
-            { x with TakeAways = x.TakeAways @ [take] }), Cmd.none
+        let talks = model.Talks |> List.replaceById talkId (fun x ->
+            { x with TakeAways = x.TakeAways @ [take] })
+        { model with Talks = talks }, Cmd.none
     | UpdateNewTakeAway(talkId, description) ->
-        model |> List.replaceById talkId (fun x -> { x with NewTakeAway = description }), Cmd.none
+        let talks = model.Talks |> List.replaceById talkId (fun x ->
+            { x with NewTakeAway = description })
+        { model with Talks = talks }, Cmd.none
+    | ToggleFun v ->
+        match v, model.FunsnakeCom with
+        | false, _ | true, Some _ ->
+            { model with HavingFun = v }, Cmd.none
+        | _ ->
+            let importFunsnake dispatch =
+                Fable.Core.JsInterop.importDynamic<Funsnake.IExports> "../Funsnake/Funsnake.fsproj"
+                |> Promise.iter (fun m -> GetFunsnakeComSucess m.Component |> dispatch)
+            model, [importFunsnake]
+    | GetFunsnakeComSucess com ->
+        { model with HavingFun = true; FunsnakeCom = Some com }, Cmd.none
 
-let view model dispatch =
-    div [] (List.map (Card.view dispatch) model)
+let view (model: Model) dispatch =
+    if model.HavingFun then
+        Level.level [] [
+            Level.item [] [from model.FunsnakeCom.Value null []]
+            Level.item [] [Button.button [
+                Button.OnClick (fun _ -> ToggleFun false |> dispatch)
+            ] [str "Back to business"]]
+        ]
+    else
+        div [] [
+            yield! List.map (Card.view dispatch) model.Talks
+            yield br []
+            yield Level.level [] [
+                Level.item [] [Button.button [
+                    Button.OnClick (fun _ -> ToggleFun true |> dispatch)
+                ] [str "Play Funsnake!"]]
+            ]
+        ]
 
 open Elmish.React
 

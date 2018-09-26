@@ -2,7 +2,7 @@
 
 const CONFIG = {
     indexHtmlTemplate: './src/index.html',
-    fsharpEntry: './src/App.fsproj',
+    fsharpEntry: './src/App/App.fsproj',
     cssEntry: './src/scss/main.scss',
     outputDir: './output',
     assetsDir: './public',
@@ -50,9 +50,13 @@ module.exports = function (_,opts) {
     },
     output: {
         path: path.join(__dirname, CONFIG.outputDir),
-        filename: 'app.js'
+        filename: '[name].js'
     },
     devtool: isProduction ? "source-map" : "eval",
+    externals: {
+        "react": "var React",
+        "react-dom": "var ReactDOM",
+    },
     plugins: !isProduction
         ? plugins
         : plugins.concat(new WorkboxPlugin.GenerateSW({

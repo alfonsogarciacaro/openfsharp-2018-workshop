@@ -3,9 +3,10 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="../Funsnake/Interfaces.fs" />
     <Compile Include="Global.fs" />
     <Compile Include="Types.fs" />
-    <Compile Include="Views/Card.fs" />
+    <Compile Include="Card.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
   <ItemGroup>
