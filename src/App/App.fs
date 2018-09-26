@@ -80,5 +80,3 @@ open Elmish.React
 Program.mkProgram init update view
 |> Program.withReact "elmish-app"
 |> Program.run
-
-registerServiceWorker(SERVICE_WORKER_PATH)

@@ -56,12 +56,6 @@ module.exports = {
             // This is necessary so WorkboxPlugin includes assets in watch compilations
             copyUnmodified: true
         }),
-        new WorkboxPlugin.GenerateSW({
-            // these options encourage the ServiceWorkers to get in there fast
-            // and not allow any straggling "old" SWs to hang around
-            clientsClaim: true,
-            skipWaiting: true,
-        })
     ],
     // - fable-loader: transforms F# into JS
     // - babel-loader: transforms JS to old syntax (compatible with old browsers)
