@@ -106,8 +106,4 @@ Program.mkProgram init update view
 |> Program.withReact "elmish-app"
 |> Program.run
 
-#if DEBUG
-unRegisterServiceWorkers()
-#else
 registerServiceWorker(SERVICE_WORKER_PATH)
-#endif

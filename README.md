@@ -1,18 +1,12 @@
-# Fulma Demo [![Build status](https://ci.appveyor.com/api/projects/status/0wcqxjaog7igxfgr/branch/master?svg=true)](https://ci.appveyor.com/project/MangelMaxime/fulma-demo/branch/master)
+# OPENFSHARP 2018: LET’S BUILD A PWA WITH FABLE
 
-# Build for production
+## Requirements
 
-Run: `./fake.sh build`
+- node.js + npm
+- dotnet SDK (if you have a version other than 2.1.402, edit global.json)
 
-All the files needed for deployment are under the `output` folder.
+## Development
 
-# Watch mode
-
-Run: `./fake.sh build -t Watch`
-
-# Running Fable without FAKE
-
-- Install NPM dependencies: `yarn`
-- Install Nuget dependencies: `dotnet restore build.proj`
-- Building for development: `dotnet fable webpack-dev-server`
-- Building for production: `dotnet fable webpack-cli`
+- Install npm and nuget dependencies: `npm install`
+- Start Fable in watch mode: `npm start`
+- Start server: press F5 (if using Ionide press F5) or `npm run start-server`

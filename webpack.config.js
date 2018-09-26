@@ -24,26 +24,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const WorkboxPlugin = require('workbox-webpack-plugin');
 
-// - HtmlWebpackPlugin: Allows us to use a template for the index.html page
-//   and automatically injects <script> or <link> tags for generated bundles.
-// - MiniCssExtractPlugin: Extracts CSS from bundle to a different file
-// - CopyWebpackPlugin: Copies static assets to output directory
-const plugins = [
-    new HtmlWebpackPlugin({
-        filename: 'index.html',
-        template: CONFIG.indexHtmlTemplate
-    }),
-    new MiniCssExtractPlugin({
-        filename: 'style.css'
-    }),
-    new CopyWebpackPlugin([{
-        from: CONFIG.assetsDir
-    }]),
-];
-
-module.exports = function (_,opts) {
-  const isProduction = opts.mode === "production";
-  return {
+module.exports = {
     // If you only need to support modern browsers, you can remove @babel/polyfill
     entry: {
         app: ["@babel/polyfill", CONFIG.fsharpEntry, CONFIG.cssEntry]
@@ -52,14 +33,30 @@ module.exports = function (_,opts) {
         path: path.join(__dirname, CONFIG.outputDir),
         filename: '[name].js'
     },
-    devtool: isProduction ? "source-map" : "eval",
+    devtool: "source-map",
     externals: {
         "react": "var React",
         "react-dom": "var ReactDOM",
     },
-    plugins: !isProduction
-        ? plugins
-        : plugins.concat(new WorkboxPlugin.GenerateSW({
+    // - HtmlWebpackPlugin: Allows us to use a template for the index.html page
+    //   and automatically injects <script> or <link> tags for generated bundles.
+    // - MiniCssExtractPlugin: Extracts CSS from bundle to a different file
+    // - CopyWebpackPlugin: Copies static assets to output directory
+    plugins: [
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: CONFIG.indexHtmlTemplate
+        }),
+        new MiniCssExtractPlugin({
+            filename: 'style.css'
+        }),
+        new CopyWebpackPlugin([{
+            from: CONFIG.assetsDir,
+        }], {
+            // This is necessary so WorkboxPlugin includes assets in watch compilations
+            copyUnmodified: true
+        }),
+        new WorkboxPlugin.GenerateSW({
             // these options encourage the ServiceWorkers to get in there fast
             // and not allow any straggling "old" SWs to hang around
             clientsClaim: true,
@@ -68,7 +65,8 @@ module.exports = function (_,opts) {
                 urlPattern: new RegExp('/api/.*'),
                 handler: 'staleWhileRevalidate'
               }]
-        })),
+        })
+    ],
     // - fable-loader: transforms F# into JS
     // - babel-loader: transforms JS to old syntax (compatible with old browsers)
     // - sass-loaders: transforms SASS/SCSS into JS
@@ -96,5 +94,4 @@ module.exports = function (_,opts) {
             }
         ]
     }
-  };
-}
+};
