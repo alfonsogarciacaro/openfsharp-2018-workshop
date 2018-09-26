@@ -9,11 +9,5 @@
     <Compile Include="Card.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
-  <ItemGroup>
-    <DotnetCliToolReference Include="dotnet-fable" Version="2.0.0-beta-005" />
-    <PackageReference Include="Fable.Core" Version="2.0.0-beta-001" />
-    <PackageReference Include="Fable.Elmish.React" Version="2.0.0-beta-4" />
-    <PackageReference Include="Fulma" Version="1.0.0-beta-026" />
-    <PackageReference Include="Thoth.Json" Version="2.0.0-beta-004" />
-  </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

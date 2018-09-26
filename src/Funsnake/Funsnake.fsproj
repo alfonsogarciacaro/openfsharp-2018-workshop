@@ -6,8 +6,5 @@
     <Compile Include="Interfaces.fs" />
     <Compile Include="Funsnake.fs" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Fable.Core" Version="2.0.0-beta-001" />
-    <PackageReference Include="Fable.React" Version="4.0.0-alpha-001" />
-  </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
